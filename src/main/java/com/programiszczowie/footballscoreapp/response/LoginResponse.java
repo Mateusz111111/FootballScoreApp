@@ -9,6 +9,6 @@ import lombok.*;
 @ToString
 public class LoginResponse {
 
-    String message;
-    Boolean status;
+    private String message;
+    private Boolean status;
 }

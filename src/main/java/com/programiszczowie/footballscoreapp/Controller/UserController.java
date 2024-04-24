@@ -5,6 +5,7 @@ import com.programiszczowie.footballscoreapp.Dto.LoginDto;
 import com.programiszczowie.footballscoreapp.Dto.UserDto;
 import com.programiszczowie.footballscoreapp.Service.UserService;
 import com.programiszczowie.footballscoreapp.response.LoginResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,8 +32,13 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginDto loginDto) {
+        ResponseEntity<LoginResponse> loginResponseEntity = userService.loginUser(loginDto);
 
-        LoginResponse loginResponse = userService.loginUser(loginDto);
-        return ResponseEntity.ok().body(loginResponse);
+        HttpStatus httpStatus = HttpStatus.resolve(loginResponseEntity.getStatusCodeValue());
+        if (httpStatus != null) {
+            return ResponseEntity.status(httpStatus).body(loginResponseEntity.getBody());
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
     }
 }

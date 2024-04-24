@@ -6,10 +6,10 @@ import com.programiszczowie.footballscoreapp.Entity.User;
 import com.programiszczowie.footballscoreapp.Repo.UserRepo;
 import com.programiszczowie.footballscoreapp.Service.UserService;
 import com.programiszczowie.footballscoreapp.response.LoginResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserImpl implements UserService {
@@ -39,27 +39,25 @@ public class UserImpl implements UserService {
         return user.getEmail();
     }
 
-    @Override
-    public LoginResponse loginUser(LoginDto loginDto) {
-
-        User user1 = userRepo.findByEmail(loginDto.getEmail());
-        if (user1 != null) {
-            String password = loginDto.getPassword();
-            String encodedPassword = user1.getPassword();
-            boolean isPasswordCorrect = passwordEncoder.matches(password, encodedPassword);
-
-            if (isPasswordCorrect) {
-                Optional<User> user = userRepo.findOneByEmailAndPassword(loginDto.getEmail(), encodedPassword);
-                if (user.isPresent()) {
-                    return new LoginResponse("Login Success", true);
-                } else {
-                    return new LoginResponse("Login Failure", false);
-                }
-            } else {
-                return new LoginResponse("Password don't match", false);
-            }
-        } else {
-            return new LoginResponse("Email don't exist", false);
+    public ResponseEntity<LoginResponse> loginUser(LoginDto loginDto) {
+        if (loginDto == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse("LoginDto is null", false));
         }
+
+        User user = userRepo.findByEmail(loginDto.getEmail());
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Email doesn't exist", false));
+        }
+
+        String password = loginDto.getPassword();
+        String encodedPassword = user.getPassword();
+        boolean isPasswordCorrect = passwordEncoder.matches(password, encodedPassword);
+
+        if (!isPasswordCorrect) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Password doesn't match", false));
+        }
+
+        return ResponseEntity.ok(new LoginResponse("Login Success", true));
     }
+
 }
