@@ -18,5 +18,4 @@ public class FootballController {
     public ResponseEntity<?> getAllFootballData() {
         return ResponseEntity.ok(footballService.getAllFootballData());
     }
-
 }

@@ -3,11 +3,14 @@ package com.programiszczowie.footballscoreapp.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 @Entity
 @Table(name = "users")
 public class User {
@@ -17,7 +20,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userid;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "first_name")

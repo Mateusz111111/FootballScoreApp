@@ -2,6 +2,7 @@ package com.programiszczowie.footballscoreapp.Dto;
 
 import lombok.*;
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor

@@ -17,16 +17,11 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
-    public String hello() {
-        return "Hello World";
-    }
-
     private final UserService userService;
 
     @PostMapping("/save")
-    public String saveUser(@RequestBody UserDto userDto) {
-
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<String> saveUser(@RequestBody UserDto userDto) {
         return userService.addUser(userDto);
     }
 

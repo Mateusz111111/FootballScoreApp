@@ -3,6 +3,7 @@ package com.programiszczowie.footballscoreapp.Dto;
 
 import lombok.*;
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -19,4 +20,7 @@ public class UserDto {
     private String firstName;
 
     private String lastName;
+
+    public UserDto(String email, String password, String test, String user) {
+    }
 }
